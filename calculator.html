@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            box-sizing: border-box;
+        }
+        .container{
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: blueviolet;
+        }
+        .calculater{
+            background: rgb(92, 66, 92);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .calculater form input{
+            border :0;
+            outline: 0;
+            height: 60px;
+            width: 60px;
+            border-radius: 10px;
+            margin: 10px;
+            cursor:pointer;
+            font-size: medium;
+            font-weight: bolder;
+        }
+        .calculater form input:hover{
+            background-color: azure;
+            transition: all ease-in-out;
+        }
+        .calculater .display input{
+            width:300px;
+            justify-content:flex-end;
+            text-align: right;
+            font-size:xx-large;
+        }
+        #ans{
+            width: 150px;
+            color: rgb(55, 0, 255);
+            font-size: medium;
+            font-weight: bolder;
+        }
+        .operator input,#o1,#o2,#o3{
+            color: red;
+            font-size: medium;
+            font-weight: bolder;
+        }
+    </style>
+</head>
+    <body>
+        <div class="container">
+            <div class="calculater">
+                <form>
+                    <div class="display">
+                        <input type="text" value="" name="display" id="display">
+                    </div>
+                <div class="operator">
+                    <input type="button"  value="AC" onclick=" display.value =''"">
+                    <input type="button" value="DEL" onclick=" display.value = display.value.toString().slice(0,-1)">
+                    <input type="button" value="*" onclick="operator('*')">
+                    <input type="button" value="/"  onclick="operator('/')">
+                </div>
+                <div>
+                    <input type="button" value="1" onclick=" display.value.length == 1 && display.value === '0'? display.value = '1':display.value += '1'">
+                    <input type="button" value="2" onclick=" display.value.length == 1 && display.value === '0'? display.value = '2':display.value += '2'">
+                    <input type="button" value="3" onclick=" display.value.length == 1 && display.value === '0'? display.value = '3':display.value += '3'">
+                    <input type="button" id="o1" value="-"  onclick="operator('-')">
+                </div>
+                <div>
+                    <input type="button" value="4" onclick=" display.value.length == 1 && display.value === '0'? display.value = '4':display.value += '4'">
+                    <input type="button" value="5" onclick=" display.value.length == 1 && display.value === '0'? display.value = '5':display.value += '5'">
+                    <input type="button" value="6" onclick=" display.value.length == 1 && display.value === '0'? display.value = '6':display.value += '6'">
+                    <input type="button" id="o2" value="+" onclick="operator('+')">
+                </div>
+                <div>
+                    <input type="button" value="7" onclick=" display.value.length == 1 && display.value === '0'? display.value = '7':display.value += '7'">
+                    <input type="button" value="8" onclick=" display.value.length == 1 && display.value === '0'? display.value = '8':display.value += '8'">
+                    <input type="button" value="9" onclick=" display.value.length == 1 && display.value === '0'? display.value = '9':display.value += '9'">
+                    <input type="button" id="o3" value="."  onclick="pointing('.')">
+                </div>
+                <div>
+                    <input type="button" value="0" onclick=" display.value.length == 0 || display.value.length == 1 && display.value.indexOf('0') == 0?display.value ='0':display.value +='0'">
+                    <input type="button" id="zero" value="00" onclick="check('00')">
+                    <input type="button"  id="ans" value="=" onclick=" display.value =Math.round(eval(display.value))">
+                </div>
+                </form>
+            </div>
+            </div>
+        </div>
+
+    </body>
+    <script>
+        function check(e) {
+            let input =   document.querySelector("#zero");
+         
+          let value =  document.getElementById("display").value
+            if (value.length == 0 || value.length == 1 && value.indexOf("0") == 0) {
+                document.getElementById("display").value = '0'; 
+            } else {
+                if (value.length == 1 && value === '0') {
+                    document.getElementById("display").value = e;
+                }
+                document.getElementById("display").value += e;
+            }
+  
+        }
+
+        function operator(o){
+            let operator = document.getElementById("display").value;
+            if (operator.lastIndexOf("+") == operator.length-1 ||operator.lastIndexOf("-") == operator.length-1 ||
+             operator.lastIndexOf("*") == operator.length-1 || operator.lastIndexOf("/") == operator.length-1) {
+                
+                document.getElementById("display").value += '';
+
+            } else {
+                if (operator.lastIndexOf(".") == operator.length - 1) {
+                    alert("Please, enter valid expression");
+                    return;
+                }
+                document.getElementById("display").value += o;
+            }
+        }
+    function pointing(p){
+        let poiterM = document.getElementById("display").value;
+       if (poiterM.includes('.')) {
+        let plus= poiterM.lastIndexOf("+");
+        let minus = poiterM.lastIndexOf("-");
+        let multiply = poiterM.lastIndexOf("*");
+        let divide = poiterM.lastIndexOf("/");
+        if (plus > minus && plus > multiply && plus > divide) {
+            let cut = poiterM.slice(++plus);
+            if (cut.includes(".")) {
+                return;
+            }else{
+                document.getElementById("display").value += '.';
+                return;
+            }
+        } else if(minus > plus && minus > multiply && minus > divide) {
+            let cut = poiterM.slice(++minus);
+            if (cut.includes(".")) {
+                return;
+            }else{
+                document.getElementById("display").value += '.';
+                return;
+            }
+        }else if (divide > plus && divide > minus && divide > multiply) {
+            let cut =poiterM.slice(++divide);
+            if (cut.includes(".")) {
+                return;
+            }else{
+                document.getElementById("display").value += '.';
+                return;
+            }
+        }else{
+            let cut = poiterM.slice(++multiply);
+            if (cut.includes(".")) {
+                return;
+            }else{
+                document.getElementById("display").value += '.';
+                return;
+            }
+        }
+        document.getElementById("display").value += '';
+
+       } else {
+        if (poiterM.lastIndexOf("+") == poiterM.length-1 ||poiterM.lastIndexOf("-") == poiterM.length-1 ||
+        poiterM.lastIndexOf("*") == poiterM.length-1 || poiterM.lastIndexOf("/") == poiterM.length-1) {
+                
+                document.getElementById("display").value += '';
+        }else{
+        document.getElementById("display").value += p;
+        }
+       }
+    }
+    </script>
+</html>
