@@ -110,5 +110,19 @@ $(document).ready(function() {
     });
   }
   
+//toggle for dark mode and light mode
+const toggleButton = document.getElementById('toggle-button');
+const body = document.body;
+
+toggleButton.addEventListener('click', () => {
+  body.classList.toggle('dark'); // Toggles between 'light' and 'dark' classes
+  
+  // Optional: Change button text based on mode
+  if (body.classList.contains('dark')) {
+    toggleButton.textContent = 'Toggle Light Mode';
+  } else {
+    toggleButton.textContent = 'Toggle Dark Mode';
+  }
+});
 
  
