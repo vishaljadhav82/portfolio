@@ -11,6 +11,10 @@ a{
   color:#fff;
   transition:0.3s; 
 }
+a:hover{
+  background-color:"white";
+  color:"black";
+}
 ul{
   list-style:none;
 }
