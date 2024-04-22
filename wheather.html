@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+        body{
+          background: #222;
+        }
+        .card{
+          width: 90%;
+          max-width: 470px;
+          background: linear-gradient(135deg,#00feba,#5b548a);
+          color: #fff;
+          margin: 100px auto 0;
+          border-radius: 20px;
+          padding: 40px 35px;
+          text-align: center;
+        }
+        .search{
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .search input{
+          border: 0;
+          outline: 0;
+          background: #ebfffc;
+          color: #555;
+          padding: 10px 25px;
+          height: 60px;
+          border-radius: 30px;
+          flex: 1;
+          margin-right: 16px;
+          font-size: 18px;
+        }
+        .search button{
+          border: 0;
+          outline: 0;
+          background: #ebfffc;
+          border-radius: 50%;
+          width: 60px;
+          height: 60px;
+          cursor: pointer;
+        }
+        .search button img{
+          width: 16px;
+        }
+        .wheather-icon{
+          width: 170px;
+          margin-top: 30px;
+        }
+        .wheather h1{
+          font-size: 80px;
+          font-weight: 500;
+        }
+        .wheather h2{
+          font-size: 45px;
+          font-weight: 200;
+          margin-top: -10px;
+        }
+
+        .details{
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 20px;
+          margin-top: 50px;
+        }
+        @media (max-width:450px) {
+          body{
+            background: #ebfffc;
+          }
+          .card{
+          max-width: 270px;
+          margin: 50px auto 0;
+          border-radius: 10px;
+          padding: 20px 18px;
+        }
+        .search input{
+          padding: 5px 12px;
+          height: 30px;
+          border-radius: 15px;
+          flex: 1;
+          margin-right: 8px;
+          font-size: 9px;
+        }
+        .search button{
+          width: 30px;
+          height: 30px;
+        }
+        .search button img{
+          width: 8px;
+        }
+        .wheather-icon{
+          width: 90px;
+          margin-top: 15px;
+        }
+        .wheather h1{
+          font-size: 40px;
+          font-weight: 500;
+        }
+        .wheather h2{
+          font-size: 27px;
+          font-weight: 200;
+          margin-top: -5px;
+        }
+
+        .details{
+        
+          padding: 0 10px;
+          margin-top: 25px;
+        }
+        }
+        @media (max-width:250px) {
+          body{
+            background: #0bd0b2;
+          }
+          .card{
+          max-width: 170px;
+          margin: 25px auto 0;
+          border-radius: 5px;
+          padding: 10px 9px;
+        }
+        .search input{
+          padding: 3px 6px;
+          height: 15px;
+          border-radius: 8px;
+          flex: 1;
+          margin-right: 4px;
+          font-size: 5px;
+        }
+        .search button{
+          width: 15px;
+          height: 15px;
+        }
+        .search button img{
+          width: 4px;
+        }
+        .wheather-icon{
+          width: 45px;
+          margin-top: 8px;
+        }
+        .wheather h1{
+          font-size: 20px;
+          font-weight: 500;
+        }
+        .wheather h2{
+          font-size: 14px;
+          font-weight: 200;
+          margin-top: -3px;
+        }
+
+        .details{
+        
+          padding: 0 5px;
+          margin-top: 13px;
+        }
+        }
+       
+           </style>
+</head>
+<body>
+    <div class="card">
+      <div class="search">
+        <input type="text" name="" placeholder="Enter City Name" id="" disabled>
+        <button disabled><img src="/images/search.png" alt=""></button>
+      </div>
+      <div class="wheather">
+        <img src="/images/clouds.png" alt="" class="wheather-icon">
+        <h1 id="temp" class="temp">22°C</h1>
+        <h2 id="city">Dharashiv</h2>
+        <div class="details">
+        <div class="col">
+          <img src="/images/humidity.png" alt="">
+          <div>
+            <p id="humidity" class="humidity">50%</p>
+            <p>Humidity</p>
+          </div>
+          </div>
+          <div class="col">
+            <img src="/images/wind.png" alt="">
+            <div>
+              <p id="wind" class="wind">50 km/h</p>
+              <p>Wind</p>
+            </div>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+</body>
+<script>
+    let w;
+    function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      // You can use the latitude and longitude here directly
+      Lattitude = latitude;
+      Longitude = longitude;
+      console.log("Latitude:", latitude);
+      console.log("Longitude:", longitude);
+      weatherData(latitude,longitude);
+    }, ()=>{
+        alert("Something went wrong ")
+    });
+  } else {
+    alert("Geolocation is not supported by this browser.");
+  }
+}
+async function weatherData(Lattitude, Longitude) {
+    try {
+        let api = `https://api.openweathermap.org/data/2.5/weather?lat=${Lattitude}&lon=${Longitude}6&appid=203a98a83c4fcaf06e1b67da808cfe63`;
+  let res =  await fetch(api);
+  let data = await res.json();
+ const icon = document.querySelector(".wheather-icon");
+  console.log(data);
+  document.getElementById("temp").innerHTML =data.main.temp+"°C" ;
+  document.getElementById("city").innerHTML = data.name;
+  document.getElementById("humidity").innerHTML= data.main.humidity+" %";
+  document.getElementById("wind").innerHTML = data.wind.speed+" km/h";
+  switch (data.weather[0].main) {
+            case "Clouds":
+                icon.src = "/images/clouds.png";
+                break;
+            case "Clear":
+                icon.src = "/images/clear.png";
+                break;
+            case "Rain":
+                icon.src = "/images/rain.png";
+                break;
+            case "Drizzle":
+                icon.src = "/images/drizzle.png";
+                break;
+            case "Mist":
+                icon.src = "/images/mist.png";
+                break;
+            case "Haze":
+                icon.src = "/images/haze.png";
+                break;
+            default:
+                console.log("Weather condition not handled:", data.weather[0].main);
+                break;
+        }
+  w = data["weather"]
+    } catch (error) {
+        console.log(error);
+    }
+    
+}
+getLocation();
+</script>
+</html>
