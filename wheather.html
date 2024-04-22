@@ -172,22 +172,22 @@
     <div class="card">
       <div class="search">
         <input type="text" name="" placeholder="Enter City Name" id="" disabled>
-        <button disabled><img src="/images/search.png" alt=""></button>
+        <button disabled><img src="search.png" alt=""></button>
       </div>
       <div class="wheather">
-        <img src="/images/clouds.png" alt="" class="wheather-icon">
+        <img src="clouds.png" alt="" class="wheather-icon">
         <h1 id="temp" class="temp">22°C</h1>
         <h2 id="city">Dharashiv</h2>
         <div class="details">
         <div class="col">
-          <img src="/images/humidity.png" alt="">
+          <img src="humidity.png" alt="">
           <div>
             <p id="humidity" class="humidity">50%</p>
             <p>Humidity</p>
           </div>
           </div>
           <div class="col">
-            <img src="/images/wind.png" alt="">
+            <img src="wind.png" alt="">
             <div>
               <p id="wind" class="wind">50 km/h</p>
               <p>Wind</p>
@@ -231,22 +231,22 @@ async function weatherData(Lattitude, Longitude) {
   document.getElementById("wind").innerHTML = data.wind.speed+" km/h";
   switch (data.weather[0].main) {
             case "Clouds":
-                icon.src = "/images/clouds.png";
+                icon.src = "clouds.png";
                 break;
             case "Clear":
-                icon.src = "/images/clear.png";
+                icon.src = "clear.png";
                 break;
             case "Rain":
-                icon.src = "/images/rain.png";
+                icon.src = "rain.png";
                 break;
             case "Drizzle":
-                icon.src = "/images/drizzle.png";
+                icon.src = "drizzle.png";
                 break;
             case "Mist":
-                icon.src = "/images/mist.png";
+                icon.src = "mist.png";
                 break;
             case "Haze":
-                icon.src = "/images/haze.png";
+                icon.src = "haze.png";
                 break;
             default:
                 console.log("Weather condition not handled:", data.weather[0].main);
