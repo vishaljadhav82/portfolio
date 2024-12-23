@@ -160,7 +160,7 @@
 <script>
 
     let members = [];
-    fetch('data.json')
+    fetch('newData.json')
     .then(response => response.json())
     .then(data => members.push(...data))
     .catch(error => console.error(error));
