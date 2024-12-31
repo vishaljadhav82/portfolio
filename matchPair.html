@@ -167,6 +167,7 @@
     }
 
     function renderCards() {
+            backgroundMusic.play();
       const levelPairs = getLevelPairs();
       if (levelPairs.length === 0) {
         message.textContent = "Congratulations! All pairs matched!";
