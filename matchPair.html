@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Match the Pair of Synonyms</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      transition: background-color 1s ease;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    #game-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .card {
+      background-color: #ffffff;
+      border: 2px solid #333;
+      border-radius: 8px;
+      padding: 10px 20px;
+      cursor: pointer;
+      text-align: center;
+      font-size: 18px;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.1);
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .selected {
+      transform: rotateY(180deg);
+      background-color: #f9c74f;
+      color: #ffffff;
+      transition: background-color 0.4s, transform 0.6s;
+    }
+
+    .matched {
+      background-color: #6fdaa0;
+      color: #ffffff;
+      pointer-events: none;
+      animation: pop 0.5s ease;
+    }
+
+    @keyframes pop {
+      0% {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #333;
+    }
+
+    #score {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #555;
+    }
+
+    #controls {
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      background-color: #333;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+  <audio id="background-music" autoplay loop>
+    <source src="backgroundMusic.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <h1>Match the Pair of Synonyms</h1>
+  <div id="game-container"></div>
+  <div id="score">Score: 0</div>
+  <div id="message"></div>
+  <div id="controls">
+    <button id="start-music">Start Music</button>
+    <button id="stop-music">Stop Music</button>
+  </div>
+
+  <script>
+    const synonymsData = {
+      Innovation: ["Creativity", "Originality"],
+      Ingenuity: ["Resourcefulness", "Inventiveness"],
+      Harmony: ["Accord", "Concord"],
+      Fortitude: ["Courage", "Resilience"],
+      Elation: ["Joy", "Happiness"],
+      Serenity: ["Peace", "Calmness"]
+    };
+
+    let level = 1;
+    let score = 0;
+    let selectedCards = [];
+    let matchedPairs = 0;
+    const gameContainer = document.getElementById("game-container");
+    const message = document.getElementById("message");
+    const scoreDisplay = document.getElementById("score");
+    const backgroundMusic = document.getElementById("background-music");
+    backgroundMusic.play();
+    let usedPairs = [];
+
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function getLevelPairs() {
+      const allPairs = [];
+      for (const word in synonymsData) {
+        synonymsData[word].forEach(synonym => {
+          if (!usedPairs.includes(`${word}-${synonym}`)) {
+            allPairs.push({ word, synonym });
+          }
+        });
+      }
+      shuffle(allPairs);
+      const levelPairs = allPairs.slice(0, level);
+      usedPairs.push(...levelPairs.map(pair => `${pair.word}-${pair.synonym}`));
+      return levelPairs;
+    }
+
+    function createCards(levelPairs) {
+      const cards = [];
+      levelPairs.forEach(pair => {
+        cards.push({ text: pair.word, type: "word" });
+        cards.push({ text: pair.synonym, type: "synonym" });
+      });
+      return shuffle(cards);
+    }
+
+    function renderCards() {
+      const levelPairs = getLevelPairs();
+      if (levelPairs.length === 0) {
+        message.textContent = "Congratulations! All pairs matched!";
+        return;
+      }
+      gameContainer.innerHTML = "";
+      const cards = createCards(levelPairs);
+      cards.forEach((card, index) => {
+        const cardElement = document.createElement("div");
+        cardElement.className = "card";
+        cardElement.textContent = card.text;
+        cardElement.dataset.type = card.type;
+        cardElement.dataset.index = index;
+        cardElement.addEventListener("click", handleCardClick);
+        gameContainer.appendChild(cardElement);
+      });
+      matchedPairs = 0;
+    }
+
+    function handleCardClick(event) {
+      const card = event.target;
+      if (card.classList.contains("matched") || selectedCards.length === 2) {
+        return;
+      }
+
+      card.classList.add("selected");
+      selectedCards.push(card);
+
+      if (selectedCards.length === 2) {
+        checkMatch();
+      }
+    }
+
+    function checkMatch() {
+      const [card1, card2] = selectedCards;
+      const isMatch =
+        card1.dataset.type !== card2.dataset.type &&
+        usedPairs.includes(
+          `${card1.textContent}-${card2.textContent}`) ||
+        usedPairs.includes(
+          `${card2.textContent}-${card1.textContent}`
+        );
+
+      if (isMatch) {
+        card1.classList.add("matched");
+        card2.classList.add("matched");
+        matchedPairs++;
+        score += 10;
+
+        if (matchedPairs === level) {
+          level++;
+          message.textContent = "Level up! New cards are here!";
+          document.body.style.backgroundColor = `hsl(${Math.random() * 360}, 50%, 75%)`;
+          setTimeout(renderCards, 1000);
+        }
+      } else {
+        score -= 5;
+        setTimeout(() => {
+          card1.classList.remove("selected");
+          card2.classList.remove("selected");
+        }, 1000);
+
+        if (score < 0) {
+          message.textContent = "Game Over! Try Again!";
+          setTimeout(() => location.reload(), 2000);
+          return;
+        }
+      }
+
+      scoreDisplay.textContent = `Score: ${score}`;
+      selectedCards = [];
+    }
+
+    document.getElementById("start-music").addEventListener("click", () => {
+      backgroundMusic.play();
+    });
+
+    document.getElementById("stop-music").addEventListener("click", () => {
+      backgroundMusic.pause();
+    });
+
+    renderCards();
+  </script>
+</body>
+</html>
